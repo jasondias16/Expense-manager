@@ -1,0 +1,10 @@
+#cont {
+  position: absolute;
+  right: 1%;
+  top: 3%;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  background-color: #4caf50;
+  color: white;
+}

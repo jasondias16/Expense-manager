@@ -1,0 +1,11 @@
+div.card:hover {
+  border: 1px solid #777;
+}
+
+.card {
+  margin: auto 2%;
+}
+#showexpenses {
+  display: flex;
+  flex-wrap: wrap;
+}
