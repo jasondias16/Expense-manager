@@ -15,6 +15,8 @@ function Signin() {
       password: values.password,
     }).then((res) => {
       console.log("res.data: " + res.data);
+      document.getElementById("info").innerHTML = res.data;
+      document.getElementById("message").style.visibility = "visible";
     });
   };
 
@@ -28,9 +30,13 @@ function Signin() {
     email: "",
     password: "",
   });
+
+  const handlealert = () => {
+    document.getElementById("message").style.visibility = "hidden";
+  };
   return (
     <div>
-      <form method="POST" onSubmit={handleSubmit} className="mt-5">
+      <form method="POST" onSubmit={handleSubmit} className="mt-3">
         {/* <!-- 2 column grid layout with text inputs htmlFor the first and last names --> */}
         <div className="row">
           <div className="col-md-6 mb-4">
@@ -43,6 +49,7 @@ function Signin() {
                 value={values.fname}
                 onChange={onChange}
                 autoFocus
+                required
               />
               <label className="form-label">First name</label>
             </div>
@@ -57,6 +64,7 @@ function Signin() {
                 value={values.lname}
                 className="form-control"
                 onChange={onChange}
+                required
               />
               <label className="form-label">Last name</label>
             </div>
@@ -70,6 +78,7 @@ function Signin() {
             id="email"
             className="form-control"
             name="email"
+            required
             value={values.email}
             onChange={onChange}
           />
@@ -80,6 +89,7 @@ function Signin() {
         <div className="form-outline mb-4">
           <input
             type="password"
+            required
             id="password"
             className="form-control"
             name="password"

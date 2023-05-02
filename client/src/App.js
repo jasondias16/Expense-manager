@@ -5,6 +5,7 @@ import LandingPage from "./pages/LandingPage";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useState } from "react";
 import UserIdState from "./context/userId/UserIdState";
+import MonthlyBudgetState from "./context/monthlyBudget/MonthlyBudgetState";
 
 //export const userID = React.createContext();
 function App() {
@@ -13,15 +14,17 @@ function App() {
 
   return (
     <UserIdState>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/">
-            <Route index element={<LandingPage />} />
-            <Route path="expense-manager" element={<Home />} />
-            <Route path="*" element={<Error />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <MonthlyBudgetState>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/">
+              <Route index element={<LandingPage />} />
+              <Route path="expense-manager" element={<Home />} />
+              <Route path="*" element={<Error />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </MonthlyBudgetState>
     </UserIdState>
   );
 }

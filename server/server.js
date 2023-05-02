@@ -6,6 +6,7 @@ const cors = require("cors");
 app.use(cors());
 const UserModel = require("./schemas/User");
 const ExpenseModel = require("./schemas/Expense");
+const MonthlyBugetModel = require("./schemas/MonthlyBudget");
 //database connection
 mongoose
   .connect("mongodb://127.0.0.1/expensedb", {
@@ -33,16 +34,14 @@ app.post("/signup", (req, res) => {
       email: u_email.trim(),
       password: u_pass,
     });
-    //console.log(user);
-    res.send("signed in successfully");
-  }
 
+    res.send("sign in successfully");
+  }
+  // checking if the user already used the email to sign in previously
   async function check_email_already_in_use() {
     const user_already_exist = await UserModel.find({ email: u_email }).select({
       email: 1,
     });
-
-    console.log("user_already_exists: ", user_already_exist.length);
 
     if (user_already_exist.length === 0) {
       //new user
@@ -50,22 +49,11 @@ app.post("/signup", (req, res) => {
     }
     //  else send message to the user : user already exist
     else {
-      res.send("user already exists");
+      res.send("Email already in use");
     }
-    // return user_already_exist;
   }
 
-  //const user_already_exist =
   check_email_already_in_use();
-
-  // check if the user already signed in with the email and dont let him sign in
-  // if (user_already_exist === []) {
-  //   run();
-  // }
-  // //  else sign in the user
-  // else {
-  //   res.send("user already exists");
-  // }
 });
 
 app.post("/login", (req, res) => {
@@ -99,7 +87,7 @@ app.post("/setExpenseData", (req, res) => {
   async function insertExpenseData() {
     const user = await ExpenseModel.create({
       date: req.body.date,
-      category: req.body.category,
+      category: req.body.category.toLowerCase(),
       amount: req.body.amount,
       userID: req.body.id,
     });
@@ -108,13 +96,88 @@ app.post("/setExpenseData", (req, res) => {
   insertExpenseData();
 });
 
-app.post("/getexpense", (req, res) => {
-  async function getExpenseData() {
-    const expenses = await ExpenseModel.find({ userID: req.body.userId });
+app.post("/getMonthlyexpense", (req, res) => {
+  async function getMonthlyExpenseData() {
+    var today = new Date();
+    var month = today.getMonth();
+    var year = today.getFullYear();
+
+    dte = year.toString() + "-" + (month + 1) + "-01";
+
+    const expenses = await ExpenseModel.find({
+      userID: req.body.userId,
+      date: { $gte: dte },
+    });
     res.json(expenses);
   }
+  getMonthlyExpenseData();
+});
 
-  getExpenseData();
+app.post("/getweeklyexpense", (req, res) => {
+  async function getWeeklyExpenseData() {
+    var today = new Date();
+    var weekstart = today.getDate() - today.getDay() + 1;
+    var month = today.getMonth();
+    var year = today.getFullYear();
+    var weekStartDay = year + "-" + (month + 1) + "-" + weekstart;
+    var weekEndDay = year + "-" + (month + 1) + "-" + (weekstart + 7);
+
+    const expenses = await ExpenseModel.find({
+      userID: req.body.userId,
+      date: { $gte: weekStartDay, $lte: weekEndDay },
+    });
+    res.json(expenses);
+  }
+  getWeeklyExpenseData();
+});
+
+app.post("/setMonthlyBudget", (req, res) => {
+  // console.log(req.body);
+  async function insertExpenseData() {
+    const categoryBudget = await MonthlyBugetModel.create({
+      date: req.body.date,
+      category: req.body.category,
+      amount: req.body.amount,
+      userID: req.body.userId,
+    });
+  }
+  //just display in the server for now
+  insertExpenseData();
+});
+
+app.post("/getMonthlyBudget", (req, res) => {
+  async function getMonthlyBudget() {
+    const monthlyBudget = await MonthlyBugetModel.find({
+      userID: req.body.userId,
+    });
+    //   console.log("monthly budget: ", monthlyBudget);
+    res.json(monthlyBudget);
+  }
+  getMonthlyBudget();
+});
+
+app.post("/deletemonthlybudgetcard", (req, res) => {
+  async function deleteMonthlyBudgetCard() {
+    const monthlyBudget = await MonthlyBugetModel.deleteOne({
+      _id: req.body.cardId,
+    });
+    //   console.log("monthly budget: ", monthlyBudget);
+    res.send("record deleted");
+  }
+  console.log("req.body.cardId", req.body.cardId);
+  deleteMonthlyBudgetCard();
+});
+
+app.post("/getUC", (req, res) => {
+  async function getUniqueCategories() {
+    const UniqueCategories = await ExpenseModel.find({
+      userID: req.body.userId,
+    }).distinct("category");
+
+    res.json(UniqueCategories);
+  }
+
+  getUniqueCategories();
 });
 
 app.listen(3001);

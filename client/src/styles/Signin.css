@@ -7,3 +7,28 @@
     margin-right: 0;
   }
 }
+
+.closebtn:hover {
+  color: rgb(207, 12, 12);
+}
+
+.closebtn {
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.alert {
+  margin: 2%;
+  box-sizing: border-box;
+  border: 1px solid black;
+  color: black;
+  visibility: hidden;
+}
+
+#info {
+  padding: 0%;
+}

@@ -1,22 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../styles/AddMonthlyBudget.css";
+import ViewMonthlyBudget from "./ViewMonthlyBudget";
+import Axios from "axios";
+import userIdContext from "../context/userId/UserIdContex";
+
 function AddMonthlyBudget() {
+  const url = "http://localhost:3001/setMonthlyBudget";
+  const id = useContext(userIdContext);
+
   const [values, setValues] = useState({
     category: "",
     amount: "",
   });
 
   const handleChange = (e) => {
-    console.log("dddeddd");
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(values);
+    console.log("values from handleSubmit function: ", values);
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, "0");
+    var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = dd + "/" + mm + "/" + yyyy;
+
+    Axios.post(url, {
+      date: today,
+      category: values.category,
+      amount: values.amount,
+      userId: id.userId,
+    }).then((res) => {
+      console.log("res.data: " + res.data);
+    });
   };
   return (
     <>
+      <ViewMonthlyBudget />
       <button
         id="cont"
         type="button"
@@ -43,6 +65,7 @@ function AddMonthlyBudget() {
                   category{" "}
                   <input
                     type="text"
+                    required
                     name="category"
                     value={values.category}
                     onChange={handleChange}
@@ -52,6 +75,7 @@ function AddMonthlyBudget() {
                   amount{" "}
                   <input
                     type="number"
+                    required
                     name="amount"
                     value={values.amount}
                     onChange={handleChange}

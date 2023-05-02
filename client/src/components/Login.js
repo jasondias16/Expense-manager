@@ -14,9 +14,6 @@ const Login = () => {
 
   const id = useContext(userIdContext);
 
-  //state variable to store the user id
-  //const [userId, setUserId] = useState("");
-
   const onChange = (e) => {
     setvalues({ ...values, [e.target.name]: e.target.value });
   };
@@ -32,11 +29,6 @@ const Login = () => {
       password: values.password,
     })
       .then((res) => res.data)
-      // .then((id) => {
-
-      //   setUserId(id);
-      //   console.log("id: ", userId);
-      // });
       .then((response) => {
         if (response !== 0) {
           console.log(response);
@@ -47,13 +39,26 @@ const Login = () => {
         } else {
           console.log(response);
           console.log("invalid credetials");
+
+          document.getElementById("info").innerHTML =
+            "Invalid Credetials. Please Check your Email-id and Password";
+          document.getElementById("message").style.visibility = "visible";
         }
       });
   };
 
+  const handlealert = () => {
+    document.getElementById("message").style.visibility = "hidden";
+  };
   return (
     <div>
-      <form className="mt-5" method="POST" onSubmit={handlelogin}>
+      <div className="alert" id="message">
+        <span className="closebtn" onClick={handlealert}>
+          &times;
+        </span>
+        <span id="info"> this is a message from the server </span>
+      </div>
+      <form className="mt-3" method="POST" onSubmit={handlelogin}>
         {/* <!-- Email input --> */}
         <div className="form-outline mb-4">
           <input

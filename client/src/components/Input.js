@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../styles/Input.css";
 import Axios from "axios";
 import DisplayExpenses from "./DisplayExpenses";
@@ -10,42 +10,52 @@ function Input() {
   const id = useContext(userIdContext);
   console.log("userid from input: ", id.userId);
   const url = "http://localhost:3001/setExpenseData";
-  const [expenseData, setExpenseData] = useState({
-    date: "",
-    category1: "",
-    amount: "",
-  });
+  // const [expenseData, setExpenseData] = useState({
+  //   date: "",
+  //   category: "",
+  //   amount: "",
+  // });
+
+  const dateRef = useRef();
+  const categoryRef = useRef();
+  const amountRef = useRef();
 
   const [dropDownListItems, setDropDownListItems] = useState([
-    "Food",
-    "Entertainment",
-    "Grocires",
-    "Utilities",
-    "Bills",
-    "Fines",
+    "food",
+    "entertainment",
+    "grocires",
+    "utilities",
+    "bills",
+    "fines",
   ]);
-  const handleChange = (e) => {
-    setExpenseData({ ...expenseData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(expenseData);
+    console.log(dateRef.current.value);
+    console.log(categoryRef.current.value.trim());
+    console.log(amountRef.current.value);
 
     Axios.post(url, {
-      date: expenseData.date,
-      category: expenseData.category1,
-      amount: expenseData.amount,
+      date: dateRef.current.value,
+      category: categoryRef.current.value.trim(),
+      amount: amountRef.current.value,
       id: id.userId,
     }).then((res) => {
       console.log(res.body);
     });
   };
 
+  useEffect(() => {
+    Axios.post("http://localhost:3001/getUC", {
+      userId: id.userId,
+    }).then((res) => res.data);
+  });
+
   return (
     <>
       <MonthlyBudget />
       <form className="input-group" onSubmit={handleSubmit} method="POST">
+        {/* Date */}
         <span className="input-group-text">Date</span>
         <input
           required
@@ -53,28 +63,19 @@ function Input() {
           className="form-control mydate"
           id="expdata"
           name="date"
-          value={expenseData.date}
-          onChange={handleChange}
+          ref={dateRef}
         />
 
+        {/* Category */}
         <span className="input-group-text">Category</span>
-        {/* <input
+        <input
           required
           type="text"
-          name="category"
           className="form-control"
-          value={expenseData.categry}
-          onChange={handleChange}
-        /> */}
-        <input
-          type="text"
-          className="form-control"
-          name="category1"
-          list="category"
-          value={expenseData.category}
-          onChange={handleChange}
+          list="category_list"
+          ref={categoryRef}
         />
-        <datalist id="category">
+        <datalist id="category_list">
           {dropDownListItems.map((item) => (
             <option key={item} value={item}>
               {item}
@@ -82,14 +83,14 @@ function Input() {
           ))}
         </datalist>
 
+        {/* Amount */}
         <span className="input-group-text">Amount</span>
         <input
           type="number"
           name="amount"
           min={0}
           className="form-control"
-          value={expenseData.amount}
-          onChange={handleChange}
+          ref={amountRef}
           required
         />
 
