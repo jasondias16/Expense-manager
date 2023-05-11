@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "../styles/Signin.css";
 import Axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Signin() {
   const url = "http://localhost:3001/signup";
@@ -14,9 +16,31 @@ function Signin() {
       email: values.email,
       password: values.password,
     }).then((res) => {
-      console.log("res.data: " + res.data);
-      document.getElementById("info").innerHTML = res.data;
-      document.getElementById("message").style.visibility = "visible";
+      // Notify the user the user
+      if (res.data === 1) {
+        toast.success("signed in successfully", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else if (res.data === 0) {
+        //email already in use
+        toast.warn("email already in use", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
     });
   };
 
@@ -31,9 +55,6 @@ function Signin() {
     password: "",
   });
 
-  const handlealert = () => {
-    document.getElementById("message").style.visibility = "hidden";
-  };
   return (
     <div>
       <form method="POST" onSubmit={handleSubmit} className="mt-3">
@@ -41,6 +62,7 @@ function Signin() {
         <div className="row">
           <div className="col-md-6 mb-4">
             <div className="form-outline">
+              <label className="form-label">First name</label>
               <input
                 type="text"
                 id="fname"
@@ -51,12 +73,12 @@ function Signin() {
                 autoFocus
                 required
               />
-              <label className="form-label">First name</label>
             </div>
           </div>
 
           <div className="col-md-6 mb-4">
             <div className="form-outline">
+              <label className="form-label">Last name</label>
               <input
                 type="text"
                 id="lname"
@@ -66,13 +88,13 @@ function Signin() {
                 onChange={onChange}
                 required
               />
-              <label className="form-label">Last name</label>
             </div>
           </div>
         </div>
 
         {/* <!-- Email input --> */}
         <div className="form-outline mb-4">
+          <label className="form-label">Email address</label>
           <input
             type="email"
             id="email"
@@ -82,11 +104,11 @@ function Signin() {
             value={values.email}
             onChange={onChange}
           />
-          <label className="form-label">Email address</label>
         </div>
 
         {/* <!-- Password input --> */}
         <div className="form-outline mb-4">
+          <label className="form-label">Password</label>
           <input
             type="password"
             required
@@ -96,7 +118,6 @@ function Signin() {
             value={values.password}
             onChange={onChange}
           />
-          <label className="form-label">Password</label>
         </div>
 
         {/* <!-- Submit button --> */}
@@ -104,6 +125,18 @@ function Signin() {
           Sign up
         </button>
       </form>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

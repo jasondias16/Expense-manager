@@ -9,3 +9,8 @@ div.card:hover {
   display: flex;
   flex-wrap: wrap;
 }
+.filterByDate {
+  font-style: italic;
+}
+.filterByDate button {
+}

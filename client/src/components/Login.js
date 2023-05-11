@@ -19,10 +19,10 @@ const Login = () => {
   };
 
   const navigate = useNavigate();
+
   const handlelogin = (e) => {
     e.preventDefault();
     console.log("login btn was clicked");
-    // console.log("login credentials", values);
 
     Axios.post(url, {
       email: values.email,
@@ -31,11 +31,11 @@ const Login = () => {
       .then((res) => res.data)
       .then((response) => {
         if (response !== 0) {
-          console.log(response);
-          //   setUserId(response);
-          id.setUserId(response);
+          console.log("response", response._id.toString());
 
-          navigate("/expense-manager");
+          id.setUserId(response._id.toString());
+          id.setUserName(response.fname);
+          navigate("expense/view-expense");
         } else {
           console.log(response);
           console.log("invalid credetials");
@@ -58,9 +58,13 @@ const Login = () => {
         </span>
         <span id="info"> this is a message from the server </span>
       </div>
+
       <form className="mt-3" method="POST" onSubmit={handlelogin}>
         {/* <!-- Email input --> */}
         <div className="form-outline mb-4">
+          <label className="form-label" htmlFor="form3Example3">
+            Email address
+          </label>{" "}
           <input
             required
             type="email"
@@ -71,13 +75,13 @@ const Login = () => {
             className="form-control form-control-lg"
             placeholder="Enter a valid email address"
           />
-          <label className="form-label" htmlFor="form3Example3">
-            Email address
-          </label>
         </div>
 
         {/* <!-- Password input --> */}
         <div className="form-outline mb-3">
+          <label className="form-label" htmlFor="form3Example4">
+            Password
+          </label>
           <input
             required
             type="password"
@@ -88,17 +92,10 @@ const Login = () => {
             className="form-control form-control-lg"
             placeholder="Enter password"
           />
-          <label className="form-label" htmlFor="form3Example4">
-            Password
-          </label>
         </div>
 
         <div className="text-center text-lg-start mt-4 pt-2">
-          <button
-            type="submit"
-            className="btn btn-primary btn-lg"
-            style={{ paddingLeft: "2.5rem", paddingRight: "2.5rem" }}
-          >
+          <button type="submit" className="btn btn-primary">
             Login
           </button>
         </div>

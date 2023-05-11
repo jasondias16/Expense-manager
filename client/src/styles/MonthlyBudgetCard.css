@@ -2,3 +2,12 @@
   display: flex;
   justify-content: space-between;
 }
+button {
+  border: 0px;
+}
+i {
+  cursor: pointer;
+}
+.card-body {
+  padding: 3% 4%;
+}

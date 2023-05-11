@@ -1,5 +1,5 @@
 import React from "react";
-import AddMonthlyBudget from "./AddMonthlyBudget";
+import AddMonthlyBudget from "../pages/AddMonthlyBudget";
 import "../styles/MonthlyBudget.css";
 function MonthlyBudget() {
   // console.log("monthly budget was renderd");
