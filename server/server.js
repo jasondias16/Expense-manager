@@ -22,64 +22,52 @@ app.use(express.urlencoded({ extended: false }));
 
 //to handle the form data from sign
 app.post("/signup", (req, res) => {
-  const u_fname = req.body.fname;
-  const u_lname = req.body.lname;
-  const u_email = req.body.email;
-  const u_pass = req.body.password;
+  const { fname, lname, email, password } = req.body;
 
   async function run() {
     const user = await UserModel.create({
-      fname: u_fname.trim(),
-      lname: u_lname.trim(),
-      email: u_email.trim(),
-      password: u_pass,
+      fname: fname.trim(),
+      lname: lname.trim(),
+      email: email.trim(),
+      password: password,
     });
 
     res.send("1");
   }
   // checking if the user already used the email to sign in previously
   async function check_email_already_in_use() {
-    const user_already_exist = await UserModel.find({ email: u_email }).select({
-      email: 1,
-    });
+    const old_user = await UserModel.findOne({ email: u_email });
 
-    if (user_already_exist.length === 0) {
-      //new user
-      run();
-    }
-    //  else send message to the user : user already exist
-    else {
+    //   send message to the user : user already exist
+    if (old_user) {
       res.send("0");
+    } else {
+      run();
     }
   }
 
   check_email_already_in_use();
 });
 
-app.post("/login", (req, res) => {
-  const u_email = req.body.email;
-  const u_pass = req.body.password;
-
-  async function check_user_credentials() {
-    const valid_user_credentials = await UserModel.find({
-      email: u_email,
-      password: u_pass,
-    });
-    //.select({ email: 1 });
-    console.log(valid_user_credentials);
-
-    if (valid_user_credentials.length === 0) {
-      // invalid user = 0
-      res.send("0");
-    } else {
-      //valid user =1
-      console.log(valid_user_credentials[0]._id.toString());
-      res.json(valid_user_credentials[0]);
-    }
-  }
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
 
   //check if the user email and password exists in the database
-  check_user_credentials();
+  const valid_user_credentials = await UserModel.find({
+    email: email,
+    password: password,
+  });
+  //.select({ email: 1 });
+  console.log(valid_user_credentials);
+
+  if (valid_user_credentials.length === 0) {
+    // invalid user = 0
+    res.send("0");
+  } else {
+    //valid user =1
+    console.log(valid_user_credentials[0]._id.toString());
+    res.json(valid_user_credentials[0]);
+  }
 });
 
 app.post("/set-expense-data", (req, res) => {
