@@ -8,9 +8,9 @@ import "../styles/Navbar.css";
 function Navbar() {
   const id = useContext(userIdContext);
   const navigate = useNavigate();
-  const userProfile = () => {
-    navigate("/user-profile");
-  };
+  // const userProfile = () => {
+  //   navigate("/user-profile");
+  // };
 
   const handleAddExpense = () => {
     navigate("add-expense");

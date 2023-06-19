@@ -2,22 +2,35 @@ import React, { useState } from "react";
 import { useContext } from "react";
 import Axios from "axios";
 import userIdContext from "../context/userId/UserIdContex";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Card(props) {
   const id = useContext(userIdContext);
 
   const url = "http://localhost:3001/delete-expense";
-  const handledelete = (id, e) => {
+  const handledelete = (expense_id, e) => {
     e.preventDefault();
     Axios.delete(url, {
       data: {
-        cardId: id,
+        expense_id: expense_id,
         userId: id.userId,
       },
     })
       .then((res) => res.body)
-      //.then((response) => console.log(response))
-      .then(() => props.rerender());
+      .then(() => props.rerender())
+      .then(() =>
+        toast.success("Expense deleted successfully", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        })
+      );
   };
 
   return (
@@ -65,6 +78,18 @@ function Card(props) {
         </div>
         {/* <p>{id.userId}</p> */}
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 }

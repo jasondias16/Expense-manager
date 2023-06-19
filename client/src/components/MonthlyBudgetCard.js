@@ -11,22 +11,27 @@ function MonthlyBudgetCard(props) {
   const handledelete = (id, e) => {
     e.preventDefault();
     console.log("Monthly Budget card id: ", id);
-    //  setCard_id(id);
+
     Axios.delete(url, {
       data: {
         cardId: id,
       },
     })
       .then((res) => res.body)
-      // .then((response) => console.log(response));
+
       .then(() => props.rerender());
   };
   return (
     <div
       className="card mb-3"
-      style={{ width: "10rem", backgroundColor: "#ffffff" }}
+      style={{
+        width: "10rem",
+
+        backgroundColor: props.balance > 0 ? "#06d6a0" : "#dc2f02",
+      }}
       key={props.id}
     >
+      {console.log("props.balance ", props.balance)}
       <div className="card-body">
         <div
           className="singleLine"
@@ -36,12 +41,6 @@ function MonthlyBudgetCard(props) {
             {props.category}
           </span>
 
-          {/* <button
-            style={{ fontSize: "10px" }}
-            onClick={(e) => handledelete(props.id, e)}
-          >
-            del btn
-          </button> */}
           <i
             className="material-icons"
             onClick={(e) => handledelete(props.id, e)}
@@ -56,6 +55,14 @@ function MonthlyBudgetCard(props) {
         >
           <span id="amount" className="card-title">
             Amount: {props.amount}
+          </span>
+        </div>
+        <div
+          className="singleLine"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <span id="amount" className="card-title">
+            Balance: {props.balance}
           </span>
         </div>
       </div>

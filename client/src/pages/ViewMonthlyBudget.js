@@ -41,6 +41,7 @@ function ViewMonthlyBudget() {
             id={expense._id}
             category={expense.category}
             amount={expense.amount}
+            balance={expense.balance}
             rerender={rerender}
           />
         ))}

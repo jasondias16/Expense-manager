@@ -50,6 +50,7 @@ const Login = () => {
   const handlealert = () => {
     document.getElementById("message").style.visibility = "hidden";
   };
+
   return (
     <div>
       <div className="alert" id="message">
